@@ -27,7 +27,7 @@
 
 ### Nmap Scan
 
-```bash
+bash
 nmap -sC -sV -p- 10.129.93.166
 Port	Service	Version
 22/tcp	SSH	OpenSSH 8.9p1
