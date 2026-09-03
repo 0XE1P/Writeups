@@ -1,5 +1,6 @@
 # [MachineName] — Cap
 **Autor!!!:** 0xE1P
+
 **Platform:** HTB  
 **Difficulty:** Easy  
 **OS:** Kali Linux  
