@@ -1,4 +1,4 @@
-1# , The author of the article: Orion
+**Author: 0xE1P**
 
 **Platform:** Hack The Box  
 **Difficulty:** Simple  
