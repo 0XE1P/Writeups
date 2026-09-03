@@ -11,6 +11,6 @@ I only write up **Medium+** machines, as they best demonstrate actual problem-so
 
 | Platform | Solved | Write-ups |
 |-----------|--------|-----------|
-| HTB       | 0      | 0         |
+| HTB       | 1      | 1         |
 | TryHackMe | 0      | 0         |
 | Proving Grounds | 0 | 0 |
